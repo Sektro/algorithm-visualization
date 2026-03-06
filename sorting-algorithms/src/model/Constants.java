@@ -19,7 +19,7 @@ public final class Constants {
 
     // Diagram
     public static final int BLOCK_HEIGHT = (DIAGRAMPANEL_HEIGHT -20) / DATA_LENGTH;
-    public static final int BLOCK_WIDTH = (DIAGRAMPANEL_HEIGHT -20) / DATA_LENGTH;
-    public static final int STARTER_POS_X = 10;
-    public static final int STARTER_POS_Y = DIAGRAMPANEL_HEIGHT-10-BLOCK_HEIGHT;
+    public static final int BLOCK_WIDTH = (DIAGRAMPANEL_WIDTH -40) / DATA_LENGTH;
+    public static final int STARTER_POS_X = 20;
+    public static final int STARTER_POS_Y = DIAGRAMPANEL_HEIGHT-10;
 }

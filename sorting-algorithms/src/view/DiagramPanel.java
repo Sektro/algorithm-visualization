@@ -31,13 +31,12 @@ public class DiagramPanel extends JPanel {
         int x = Constants.STARTER_POS_X;
         int y = Constants.STARTER_POS_Y;
         for (int i = 0; i < Constants.DATA_LENGTH; ++i) {
-            for (int j = 0; j < data[i]; ++j) {
-                g2.fillRect(x,y,Constants.BLOCK_WIDTH,Constants.BLOCK_HEIGHT);
-                y -= Constants.BLOCK_HEIGHT;
-            }
+            y -= Constants.BLOCK_HEIGHT * data[i];
+            g2.fillRect(x,y,Constants.BLOCK_WIDTH,Constants.BLOCK_HEIGHT * data[i]);
             x += Constants.BLOCK_WIDTH;
             y = Constants.STARTER_POS_Y;
         }
+        //g2.fillRect(x-10,y+10-Constants.BLOCK_HEIGHT*10,Constants.BLOCK_WIDTH*10,Constants.BLOCK_HEIGHT*10);
 
     }
 }

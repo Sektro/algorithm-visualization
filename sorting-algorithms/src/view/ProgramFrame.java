@@ -16,12 +16,14 @@ public class ProgramFrame extends JFrame {
         this.setTitle("Sorting Algorithms");
 
         diagramPanel = new DiagramPanel();
+        JPanel wrapperPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        wrapperPanel.add(diagramPanel);
         buttonPanel = new ButtonPanel();
 
-        this.getContentPane().add(BorderLayout.NORTH, diagramPanel);
+        this.getContentPane().add(BorderLayout.NORTH, wrapperPanel);
         this.getContentPane().add(BorderLayout.SOUTH, buttonPanel);
-
         this.pack();
+
         this.setLocationRelativeTo(null);
         this.setVisible(true);
     }
