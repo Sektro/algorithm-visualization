@@ -9,13 +9,13 @@ import java.awt.*;
 public class DiagramPanel extends JPanel {
     private Sorter sorter;
 
-    public DiagramPanel() {
+    public DiagramPanel(Sorter sorter) {
         this.setPreferredSize(new Dimension(Constants.DIAGRAMPANEL_WIDTH,Constants.DIAGRAMPANEL_HEIGHT));
         this.setBackground(Color.black);
         this.setDoubleBuffered(true); // improved rendering performance
         this.setFocusable(true); // will receive key input
 
-        sorter = new Sorter();
+        this.sorter = sorter;
     }
 
     public void paintComponent(Graphics g) {
@@ -36,7 +36,5 @@ public class DiagramPanel extends JPanel {
             x += Constants.BLOCK_WIDTH;
             y = Constants.STARTER_POS_Y;
         }
-        //g2.fillRect(x-10,y+10-Constants.BLOCK_HEIGHT*10,Constants.BLOCK_WIDTH*10,Constants.BLOCK_HEIGHT*10);
-
     }
 }
