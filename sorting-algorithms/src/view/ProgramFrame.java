@@ -17,6 +17,7 @@ public class ProgramFrame extends JFrame {
         this.setPreferredSize(new Dimension(Constants.FRAME_WIDTH, Constants.FRAME_HEIGHT));
         this.setTitle("Sorting Algorithms");
 
+        this.sorter = new Sorter();
         diagramPanel = new DiagramPanel(sorter);
         JPanel wrapperPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         wrapperPanel.add(diagramPanel);

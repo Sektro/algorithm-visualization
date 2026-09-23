@@ -1,5 +1,8 @@
 package model;
 
 public enum Algorithms {
-    BUBBLE
+    BUBBLE,
+    IMPROVED_BUBBLE,
+    INSERTION,
+    MAX
 }
