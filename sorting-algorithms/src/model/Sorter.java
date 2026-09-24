@@ -1,9 +1,11 @@
 package model;
 
 import java.util.Random;
+import javax.swing.SwingUtilities;
 
 public class Sorter {
     private final int[] data = new int[Constants.DATA_LENGTH];
+    private Runnable updateCallback;
     public int[] getData() {
         return data;
     }
@@ -12,27 +14,39 @@ public class Sorter {
         for (int i = 0; i < Constants.DATA_LENGTH; data[i] = ++i) {}
     }
 
-    public void callAlgorithm(Algorithms algorithm) {
-        
-        switch (algorithm) {
-            case BUBBLE -> {
-                bubbleSort();
-            }
-            case IMPROVED_BUBBLE -> {
-                improvedBubbleSort();
-            }
-            case INSERTION -> {
-                insertionSort();
-            }
-            case MAX -> {
-                maxSort();
+    public void setUpdateCallback(Runnable updateCallback) {
+        this.updateCallback = updateCallback;
+    }
+
+    // Triggers the UI update and pauses the background thread
+    private void updateUI() {
+        if (updateCallback != null) {
+            SwingUtilities.invokeLater(updateCallback);
+            try {
+                Thread.sleep(Constants.SORT_DELAY_MS);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
             }
         }
+    }
+
+    public void callAlgorithm(Algorithms algorithm) {
+
+        // Run on a background thread to prevent freezing the UI
+        new Thread(() -> {
+            switch (algorithm) {
+                case BUBBLE -> bubbleSort();
+                case IMPROVED_BUBBLE -> improvedBubbleSort();
+                case INSERTION -> insertionSort();
+                case MAX -> maxSort();
+            }
+        }).start();
     }
     private void swap(int a, int b) {
         int temp = data[a];
         data[a] = data[b];
         data[b] = temp;
+        updateUI(); // Notify UI of the change
     }
     private void shuffle(int shuffles) {
         Random rnd = new Random();
@@ -85,12 +99,15 @@ public class Sorter {
             if (data[i-1] > data[i]) {
                 int x = data[i];
                 data[i] = data[i-1];
+                updateUI(); // Notify UI for the shift
                 int j = i - 2;
                 while (j>=0 && data[j] > x) {
                     data[j+1] = data[j];
+                    updateUI(); // Notify UI for the shift
                     --j;
                 }
                 data[j+1] = x;
+                updateUI(); // Notify UI for the shift
             }
         }
         printData();
