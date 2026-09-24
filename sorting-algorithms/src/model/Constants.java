@@ -15,8 +15,7 @@ public final class Constants {
 
     // Sorter
     public static final int DATA_LENGTH = 100;
-    public static final int STANDARD_SHUFFLE_NUMBER = 10;
-    // ADDED: Delay in milliseconds between steps
+    public static final int STANDARD_SHUFFLE_NUMBER = 100;
     public static final int SORT_DELAY_MS = 10;
 
     // Diagram

@@ -46,14 +46,27 @@ public class Sorter {
         int temp = data[a];
         data[a] = data[b];
         data[b] = temp;
-        updateUI(); // Notify UI of the change
+        updateUI();
+    }
+    private void unnoticableSwap(int a, int b) {
+        int temp = data[a];
+        data[a] = data[b];
+        data[b] = temp;
+    }
+    private void shuffle() {
+        Random rnd = new Random();
+        for (int i = 0; i < Constants.STANDARD_SHUFFLE_NUMBER; ++i) {
+            int a = rnd.nextInt(0,Constants.DATA_LENGTH);
+            int b = rnd.nextInt(0,Constants.DATA_LENGTH);
+            unnoticableSwap(a,b);
+        }
     }
     private void shuffle(int shuffles) {
         Random rnd = new Random();
         for (int i = 0; i < shuffles; ++i) {
             int a = rnd.nextInt(0,Constants.DATA_LENGTH);
             int b = rnd.nextInt(0,Constants.DATA_LENGTH);
-            swap(a,b);
+            unnoticableSwap(a,b);
         }
     }
     private void printData() {
@@ -65,7 +78,7 @@ public class Sorter {
 
     //Sorts
     private void bubbleSort() {
-            shuffle(20);
+            shuffle();
             printData();
             for (int i = data.length; i > 0; --i) {
                 for (int j = 0; j < i-1; ++j) {
@@ -77,7 +90,7 @@ public class Sorter {
             printData();
     }
     private void improvedBubbleSort() {
-        shuffle(20);
+        shuffle();
         printData();
         int i = data.length-1;
         while (i >= 1) {
@@ -93,7 +106,7 @@ public class Sorter {
         printData();
     }
     private void insertionSort() {
-        shuffle(20);
+        shuffle();
         printData();
         for (int i = 1; i < data.length; ++i) {
             if (data[i-1] > data[i]) {
@@ -113,7 +126,7 @@ public class Sorter {
         printData();
     }
     private void maxSort() {
-        shuffle(20);
+        shuffle();
         printData();
         for (int i = data.length-1; i > 0; --i) {
             int ind = 0;
