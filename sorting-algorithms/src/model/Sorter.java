@@ -10,6 +10,17 @@ public class Sorter {
         return data;
     }
 
+    private int activeIndex1 = -1;
+    private int activeIndex2 = -1;
+    public int getActiveIndex1() { return activeIndex1; }
+    public int getActiveIndex2() { return activeIndex2; }
+
+    private void resetActiveIndices() {
+        activeIndex1 = -1;
+        activeIndex2 = -1;
+        updateUI();
+    }
+
     public Sorter() {
         for (int i = 0; i < Constants.DATA_LENGTH; data[i] = ++i) {}
     }
@@ -43,6 +54,8 @@ public class Sorter {
         }).start();
     }
     private void swap(int a, int b) {
+        activeIndex1 = a;
+        activeIndex2 = b;
         int temp = data[a];
         data[a] = data[b];
         data[b] = temp;
@@ -111,19 +124,26 @@ public class Sorter {
         for (int i = 1; i < data.length; ++i) {
             if (data[i-1] > data[i]) {
                 int x = data[i];
+                activeIndex1 = i;
+                activeIndex2 = i - 1;
                 data[i] = data[i-1];
                 updateUI(); // Notify UI for the shift
                 int j = i - 2;
                 while (j>=0 && data[j] > x) {
+                    activeIndex1 = j + 1;
+                    activeIndex2 = j;
                     data[j+1] = data[j];
                     updateUI(); // Notify UI for the shift
                     --j;
                 }
+                activeIndex1 = j + 1;
+                activeIndex2 = -1;
                 data[j+1] = x;
                 updateUI(); // Notify UI for the shift
             }
         }
         printData();
+        resetActiveIndices();
     }
     private void maxSort() {
         shuffle();

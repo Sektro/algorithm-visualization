@@ -28,9 +28,16 @@ public class DiagramPanel extends JPanel {
     private void renderDiagram(Graphics2D g2) {
         g2.setColor(Color.GREEN);
         int [] data = sorter.getData();
+        int active1 = sorter.getActiveIndex1();
+        int active2 = sorter.getActiveIndex2();
         int x = Constants.STARTER_POS_X;
         int y = Constants.STARTER_POS_Y;
         for (int i = 0; i < Constants.DATA_LENGTH; ++i) {
+            if (i == active1 || i == active2) {
+                g2.setColor(Color.RED);
+            } else {
+                g2.setColor(Color.GREEN);
+            }
             y -= Constants.BLOCK_HEIGHT * data[i];
             g2.fillRect(x,y,Constants.BLOCK_WIDTH,Constants.BLOCK_HEIGHT * data[i]);
             x += Constants.BLOCK_WIDTH;
