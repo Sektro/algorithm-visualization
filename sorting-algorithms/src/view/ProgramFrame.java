@@ -17,7 +17,11 @@ public class ProgramFrame extends JFrame {
         this.setPreferredSize(new Dimension(Constants.FRAME_WIDTH, Constants.FRAME_HEIGHT));
         this.setTitle("Sorting Algorithms");
 
+        this.sorter = new Sorter();
         diagramPanel = new DiagramPanel(sorter);
+        // WIRE THE CALLBACK HERE: Tell the sorter to repaint the panel when data changes
+        this.sorter.setUpdateCallback(() -> diagramPanel.repaint());
+
         JPanel wrapperPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         wrapperPanel.add(diagramPanel);
         buttonPanel = new ButtonPanel(sorter);

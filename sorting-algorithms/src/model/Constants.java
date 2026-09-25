@@ -14,8 +14,9 @@ public final class Constants {
     public static final int BUTTONPANEL_HEIGHT = 100;
 
     // Sorter
-    public static final int DATA_LENGTH = 10;
-    public static final int STANDARD_SHUFFLE_NUMBER = 10;
+    public static final int DATA_LENGTH = 100;
+    public static final int STANDARD_SHUFFLE_NUMBER = 100;
+    public static final int SORT_DELAY_MS = 10;
 
     // Diagram
     public static final int BLOCK_HEIGHT = (DIAGRAMPANEL_HEIGHT -20) / DATA_LENGTH;
