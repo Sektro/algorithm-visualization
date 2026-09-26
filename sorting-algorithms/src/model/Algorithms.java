@@ -5,5 +5,6 @@ public enum Algorithms {
     IMPROVED_BUBBLE,
     INSERTION,
     MAX,
-    QUICK
+    QUICK,
+    MERGE
 }
