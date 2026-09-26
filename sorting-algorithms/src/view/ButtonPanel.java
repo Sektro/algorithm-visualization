@@ -12,6 +12,7 @@ public class ButtonPanel extends JPanel {
     private AlgorithmButton improvedBubbleSortButton = new AlgorithmButton("Improved Bubble Sort");
     private AlgorithmButton insertionSortButton = new AlgorithmButton("Insertion Sort");
     private AlgorithmButton maxSortButton = new AlgorithmButton("Max Sort");
+    private AlgorithmButton quickSortButton = new AlgorithmButton("Quick Sort");
 
     public ButtonPanel(Sorter sorter) {
         this.setBackground(Color.BLUE);
@@ -31,12 +32,16 @@ public class ButtonPanel extends JPanel {
         maxSortButton.addActionListener(e -> {
             sorter.callAlgorithm(Algorithms.MAX);
         });
+        quickSortButton.addActionListener(e -> {
+            sorter.callAlgorithm(Algorithms.QUICK);
+        });
 
         this.setLayout(new FlowLayout());
         this.add(bubbleSortButton);
         this.add(improvedBubbleSortButton);
         this.add(insertionSortButton);
         this.add(maxSortButton);
+        this.add(quickSortButton);
     }
 
     public void paintComponent(Graphics g) {

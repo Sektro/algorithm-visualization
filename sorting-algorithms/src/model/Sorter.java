@@ -50,6 +50,7 @@ public class Sorter {
                 case IMPROVED_BUBBLE -> improvedBubbleSort();
                 case INSERTION -> insertionSort();
                 case MAX -> maxSort();
+                case QUICK -> quickSort();
             }
         }).start();
     }
@@ -101,6 +102,7 @@ public class Sorter {
                 }
             }
             printData();
+        resetActiveIndices();
     }
     private void improvedBubbleSort() {
         shuffle();
@@ -117,6 +119,7 @@ public class Sorter {
             i = u;
         }
         printData();
+        resetActiveIndices();
     }
     private void insertionSort() {
         shuffle();
@@ -158,6 +161,42 @@ public class Sorter {
             swap(ind,i);
         }
         printData();
+        resetActiveIndices();
+    }
+    private void quickSort() {
+        shuffle();
+        printData();
+        quickSortRecursion(0,Constants.DATA_LENGTH-1);
+        printData();
+        resetActiveIndices();
+    }
+    private void quickSortRecursion(int firstIndex, int lastIndex) {
+        if (firstIndex < lastIndex) {
+            int pivot = quickSortPartition(firstIndex,lastIndex);
+            quickSortRecursion(firstIndex, pivot-1);
+            quickSortRecursion(pivot+1, lastIndex);
+        }
+    }
+    private int quickSortPartition(int firstIndex, int lastIndex) {
+        Random rnd = new Random();
+        int i = rnd.nextInt(firstIndex,lastIndex+1);
+        swap(i,lastIndex);
+        i = firstIndex;
+        while (i < lastIndex && data[i] <= data[lastIndex]) {
+            ++i;
+        }
+        if (i < lastIndex) {
+            int j = i + 1;
+                while (j < lastIndex) {
+                    if (data[j] < data[lastIndex]) {
+                        swap(i,j);
+                        ++i;
+                    }
+                    ++j;
+                }
+            swap(i,lastIndex);
+        }
+        return i;
     }
 }
 
