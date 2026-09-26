@@ -50,6 +50,8 @@ public class Sorter {
                 case IMPROVED_BUBBLE -> improvedBubbleSort();
                 case INSERTION -> insertionSort();
                 case MAX -> maxSort();
+                case QUICK -> quickSort();
+                case MERGE -> mergeSort();
             }
         }).start();
     }
@@ -101,6 +103,7 @@ public class Sorter {
                 }
             }
             printData();
+        resetActiveIndices();
     }
     private void improvedBubbleSort() {
         shuffle();
@@ -117,6 +120,7 @@ public class Sorter {
             i = u;
         }
         printData();
+        resetActiveIndices();
     }
     private void insertionSort() {
         shuffle();
@@ -124,22 +128,20 @@ public class Sorter {
         for (int i = 1; i < data.length; ++i) {
             if (data[i-1] > data[i]) {
                 int x = data[i];
-                activeIndex1 = i;
-                activeIndex2 = i - 1;
                 data[i] = data[i-1];
-                updateUI(); // Notify UI for the shift
+                updateUI();
                 int j = i - 2;
                 while (j>=0 && data[j] > x) {
                     activeIndex1 = j + 1;
                     activeIndex2 = j;
                     data[j+1] = data[j];
-                    updateUI(); // Notify UI for the shift
+                    updateUI();
                     --j;
                 }
                 activeIndex1 = j + 1;
                 activeIndex2 = -1;
                 data[j+1] = x;
-                updateUI(); // Notify UI for the shift
+                updateUI();
             }
         }
         printData();
@@ -158,6 +160,95 @@ public class Sorter {
             swap(ind,i);
         }
         printData();
+        resetActiveIndices();
+    }
+    private void quickSort() {
+        shuffle();
+        printData();
+        quickSortRecursion(0,Constants.DATA_LENGTH-1);
+        printData();
+        resetActiveIndices();
+    }
+    private void quickSortRecursion(int firstIndex, int lastIndex) {
+        if (firstIndex < lastIndex) {
+            int pivot = quickSortPartition(firstIndex,lastIndex);
+            quickSortRecursion(firstIndex, pivot-1);
+            quickSortRecursion(pivot+1, lastIndex);
+        }
+    }
+    private int quickSortPartition(int firstIndex, int lastIndex) {
+        Random rnd = new Random();
+        int i = rnd.nextInt(firstIndex,lastIndex+1);
+        swap(i,lastIndex);
+        i = firstIndex;
+        while (i < lastIndex && data[i] <= data[lastIndex]) {
+            ++i;
+        }
+        if (i < lastIndex) {
+            int j = i + 1;
+                while (j < lastIndex) {
+                    if (data[j] < data[lastIndex]) {
+                        swap(i,j);
+                        ++i;
+                    }
+                    ++j;
+                }
+            swap(i,lastIndex);
+        }
+        return i;
+    }
+    private void mergeSort() {
+        shuffle();
+        printData();
+        int[] dataB = new int[Constants.DATA_LENGTH];
+        for (int i = 0; i < Constants.DATA_LENGTH; ++i) {
+            dataB[i] = data[i];
+        }
+        ms(dataB,data,0,data.length-1);
+        printData();
+        resetActiveIndices();
+    }
+    private void ms(int[] B, int[] A, int firstIndex, int lastIndex) {
+        int length = lastIndex-firstIndex+1;
+        if (length > 1) {
+            int mid = (firstIndex+lastIndex)/2;
+            ms(B,A,firstIndex,mid);
+            ms(B,A,mid+1,lastIndex);
+            merge(B,A,firstIndex,mid,lastIndex);
+        }
+    }
+    private void merge(int[] B, int[] A, int firstIndex, int mid, int lastIndex) {
+        for (int x = firstIndex; x <= lastIndex; x++) {
+            B[x] = A[x];
+        }
+        int k = firstIndex;
+        int i = firstIndex;
+        int j = mid+ 1;
+        while (i <= mid && j <= lastIndex) {
+            if (B[i] <= B[j]) {
+                A[k] = B[i];
+                activeIndex1 = i;
+                activeIndex2 = k;
+                ++i;
+                updateUI();
+            }
+            else {
+                A[k] = B[j];
+                ++j;
+                activeIndex1 = k;
+                activeIndex2 = j;
+                updateUI();
+            }
+            ++k;
+        }
+        while (i <= mid) {
+            A[k] = B[i];
+            activeIndex1 = i;
+            activeIndex2 = k;
+            updateUI();
+            k++;
+            i++;
+        }
     }
 }
 
