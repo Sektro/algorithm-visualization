@@ -1,6 +1,7 @@
 package model;
 
 import java.util.Random;
+import java.util.concurrent.atomic.AtomicBoolean;
 import javax.swing.SwingUtilities;
 
 public class Sorter {
@@ -10,8 +11,10 @@ public class Sorter {
         return data;
     }
 
-    private int activeIndex1 = -1;
-    private int activeIndex2 = -1;
+    private final AtomicBoolean running = new AtomicBoolean(false);
+
+    private volatile int activeIndex1 = -1;
+    private volatile int activeIndex2 = -1;
     public int getActiveIndex1() { return activeIndex1; }
     public int getActiveIndex2() { return activeIndex2; }
 
@@ -29,7 +32,6 @@ public class Sorter {
         this.updateCallback = updateCallback;
     }
 
-    // Triggers the UI update and pauses the background thread
     private void updateUI() {
         if (updateCallback != null) {
             SwingUtilities.invokeLater(updateCallback);
@@ -42,18 +44,26 @@ public class Sorter {
     }
 
     public void callAlgorithm(Algorithms algorithm) {
+        if (!running.compareAndSet(false, true)) {
+            return;
+        }
 
-        // Run on a background thread to prevent freezing the UI
-        new Thread(() -> {
-            switch (algorithm) {
-                case BUBBLE -> bubbleSort();
-                case IMPROVED_BUBBLE -> improvedBubbleSort();
-                case INSERTION -> insertionSort();
-                case MAX -> maxSort();
-                case QUICK -> quickSort();
-                case MERGE -> mergeSort();
+        Thread worker = new Thread(() -> {
+            try {
+                switch (algorithm) {
+                    case BUBBLE -> bubbleSort();
+                    case IMPROVED_BUBBLE -> improvedBubbleSort();
+                    case INSERTION -> insertionSort();
+                    case MAX -> maxSort();
+                    case QUICK -> quickSort();
+                    case MERGE -> mergeSort();
+                }
+            } finally {
+                running.set(false);
             }
-        }).start();
+        });
+        worker.setDaemon(true);
+        worker.start();
     }
     private void swap(int a, int b) {
         activeIndex1 = a;
@@ -69,12 +79,7 @@ public class Sorter {
         data[b] = temp;
     }
     private void shuffle() {
-        Random rnd = new Random();
-        for (int i = 0; i < Constants.STANDARD_SHUFFLE_NUMBER; ++i) {
-            int a = rnd.nextInt(0,Constants.DATA_LENGTH);
-            int b = rnd.nextInt(0,Constants.DATA_LENGTH);
-            unnoticableSwap(a,b);
-        }
+        shuffle(Constants.STANDARD_SHUFFLE_NUMBER);
     }
     private void shuffle(int shuffles) {
         Random rnd = new Random();
@@ -93,16 +98,16 @@ public class Sorter {
 
     //Sorts
     private void bubbleSort() {
-            shuffle();
-            printData();
-            for (int i = data.length; i > 0; --i) {
-                for (int j = 0; j < i-1; ++j) {
-                    if (data[j] > data[j+1]) {
-                        swap(j,j+1);
-                    }
+        shuffle();
+        printData();
+        for (int i = data.length; i > 0; --i) {
+            for (int j = 0; j < i-1; ++j) {
+                if (data[j] > data[j+1]) {
+                    swap(j,j+1);
                 }
             }
-            printData();
+        }
+        printData();
         resetActiveIndices();
     }
     private void improvedBubbleSort() {
@@ -179,11 +184,15 @@ public class Sorter {
     private int quickSortPartition(int firstIndex, int lastIndex) {
         Random rnd = new Random();
         int i = rnd.nextInt(firstIndex,lastIndex+1);
-        swap(i,lastIndex);
+        if (i != lastIndex) {
+            swap(i,lastIndex);
+        }
+
         i = firstIndex;
         while (i < lastIndex && data[i] <= data[lastIndex]) {
             ++i;
         }
+
         if (i < lastIndex) {
             int j = i + 1;
                 while (j < lastIndex) {
@@ -234,9 +243,9 @@ public class Sorter {
             }
             else {
                 A[k] = B[j];
+                activeIndex1 = j;
+                activeIndex2 = k;
                 ++j;
-                activeIndex1 = k;
-                activeIndex2 = j;
                 updateUI();
             }
             ++k;
